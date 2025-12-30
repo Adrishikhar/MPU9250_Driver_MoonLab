@@ -8,27 +8,13 @@ This is a register-level MPU9250 clone driver available in the MOON LAB. IT proc
 This repository contains a **minimal register-level driver** for reading data from a **clone MPU9250 IMU** using Arduino and MATLAB.
 
 ⚠️ **Important:**  
-Although the chip is labeled *MPU9250*, the onboard **magnetometer (AK8963) is missing or non-functional**.  
-This behavior is common in low-cost MPU9250 clones available in the market.
-
-As a result:
-- The sensor behaves effectively as a **6-DoF IMU** (Accelerometer + Gyroscope)
-- **No magnetometer data is available**
-- **Yaw (heading) is unobservable in absolute terms** without external aiding (e.g., GPS, vision, or magnetometer)
+Although the chip is labeled *MPU9250*, the onboard **magnetometer (AK8963) is missing or non-functional**.  The sensor behaves effectively as a **6-DoF IMU** (Accelerometer + Gyroscope)
+**Yaw (heading) is unobservable in absolute terms** without external aiding (e.g., GPS, vision, or magnetometer)
 
 ---
 
-## Hardware Details
-
-- **Sensor**: MPU9250 (Clone)
-- **Functional Sensors**:
-  - 3-axis Accelerometer
-  - 3-axis Gyroscope
-- **Missing / Non-functional**:
-  - Magnetometer (AK8963 not detected / not present)
-
 ### Observed Clone Behavior
-- WHO_AM_I register responds correctly
+- WHO_AM_I register responds incorrectly (0x75 --> Should be 0x71 or 0x72)
 - Accel & gyro registers output valid data
 - I2C bypass mode does **not** expose AK8963
 - Magnetometer I2C address does not ACK
@@ -53,7 +39,6 @@ As a result:
 
 ### Key Characteristics
 - Register-level access (no high-level libraries)
-- Intended for **debugging, validation, and research**
 - Suitable for EKF / INS preprocessing in MATLAB
 
 ### Typical Registers Read
@@ -83,16 +68,6 @@ As a result:
   - Calibration
   - EKF / INS fusion
   - Offline analysis
-
-### Typical Workflow
-1. Open serial port
-2. Read incoming data line-by-line
-3. Convert raw counts to physical units
-4. Feed into:
-   - Custom EKF
-   - `insfilterIMU`
-   - `insfilterErrorState`
-   - Custom navigation stack
 
 ---
 
